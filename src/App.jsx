@@ -3,7 +3,7 @@ import SearchBar from './components/SearchBar';
 import WeatherCard from './components/WeatherCard';
 import Forecast from './components/Forecast';
 import LoadingSpinner from './components/LoadingSpinner';
-import { fetchWeatherData, fetchForecastData } from './utils/weatherAPI';
+import { fetchWeatherData, fetchForecastData } from './utils/weatherAPI'; // ✅ Fixed import
 import './styles/App.css';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
       console.log('🔍 Loading weather for:', city);
       
       const weather = await fetchWeatherData(city);
-      const forecast = await fetchForecastData(city);
+      const forecast = await fetchForecastData(city); // ✅ Fixed — was missing 'fetchForecastData'
       
       setWeatherData(weather);
       setForecastData(forecast);
