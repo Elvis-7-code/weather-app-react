@@ -4,6 +4,7 @@ import WeatherCard from './components/WeatherCard';
 import Forecast from './components/Forecast';
 import LoadingSpinner from './components/LoadingSpinner';
 import { fetchWeatherData, fetchForecastData } from './utils/weatherAPI';
+import './styles/App.css';
 
 function App() {
   const [weatherData, setWeatherData] = useState(null);
@@ -12,8 +13,11 @@ function App() {
   const [error, setError] = useState(null);
   const [city, setCity] = useState('Nairobi');
 
+  // Load weather when city changes
   useEffect(() => {
-    loadWeatherData();
+    if (city) {
+      loadWeatherData();
+    }
   }, [city]);
 
   const loadWeatherData = async () => {
@@ -21,12 +25,18 @@ function App() {
     setError(null);
     
     try {
+      console.log('🔍 Loading weather for:', city);
+      
       const weather = await fetchWeatherData(city);
       const forecast = await fetchForecastData(city);
       
       setWeatherData(weather);
       setForecastData(forecast);
+      
+      console.log('✅ Data loaded successfully');
+      
     } catch (err) {
+      console.error('❌ Failed to load:', err.message);
       setError(err.message);
       setWeatherData(null);
       setForecastData(null);
@@ -36,6 +46,7 @@ function App() {
   };
 
   const handleSearch = (newCity) => {
+    console.log('🔍 Searching for:', newCity);
     setCity(newCity);
   };
 
@@ -55,6 +66,7 @@ function App() {
           <div className="error-message">
             <i className="fas fa-exclamation-triangle"></i>
             <p>{error}</p>
+            <small>Try searching for "London", "Nairobi", or "New York"</small>
           </div>
         )}
         
@@ -63,6 +75,15 @@ function App() {
             <WeatherCard data={weatherData} />
             <Forecast data={forecastData} />
           </>
+        )}
+
+        {/* Debug info - remove after testing */}
+        {!loading && !error && !weatherData && !forecastData && (
+          <div className="error-message">
+            <i className="fas fa-info-circle"></i>
+            <p>Waiting for search...</p>
+            <small>Type a city name and press Search</small>
+          </div>
         )}
       </div>
     </div>
